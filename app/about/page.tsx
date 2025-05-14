@@ -36,7 +36,7 @@ export default function AboutPage() {
             </div>
             <CardHeader>
               <CardTitle className="text-2xl">Subham Biswas</CardTitle>
-              <CardDescription>Co-Founder & CEO</CardDescription>
+              <CardDescription>Co-Founder</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               <p>
