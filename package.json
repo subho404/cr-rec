@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@emailjs/nodejs": "^5.0.2",
     "@google/generative-ai": "latest",
     "@hookform/resolvers": "latest",
     "@radix-ui/react-accordion": "1.2.2",

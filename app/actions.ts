@@ -4,11 +4,39 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 // Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "")
 
-// EmailJS configuration
-const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID || ""
-const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID || ""
-const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY || ""
-const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || ""
+// Car image mapping for common Indian cars
+const CAR_IMAGE_MAPPING: Record<string, string[]> = {
+  "Tata Nexon": [
+    "/placeholder.svg?height=400&width=600&text=Tata%20Nexon%20Front",
+    "/placeholder.svg?height=400&width=600&text=Tata%20Nexon%20Side",
+    "/placeholder.svg?height=400&width=600&text=Tata%20Nexon%20Rear",
+  ],
+  "Maruti Suzuki Swift": [
+    "/placeholder.svg?height=400&width=600&text=Maruti%20Swift%20Front",
+    "/placeholder.svg?height=400&width=600&text=Maruti%20Swift%20Side",
+    "/placeholder.svg?height=400&width=600&text=Maruti%20Swift%20Rear",
+  ],
+  "Hyundai Creta": [
+    "/placeholder.svg?height=400&width=600&text=Hyundai%20Creta%20Front",
+    "/placeholder.svg?height=400&width=600&text=Hyundai%20Creta%20Side",
+    "/placeholder.svg?height=400&width=600&text=Hyundai%20Creta%20Rear",
+  ],
+  "Kia Seltos": [
+    "/placeholder.svg?height=400&width=600&text=Kia%20Seltos%20Front",
+    "/placeholder.svg?height=400&width=600&text=Kia%20Seltos%20Side",
+    "/placeholder.svg?height=400&width=600&text=Kia%20Seltos%20Rear",
+  ],
+  "Mahindra XUV700": [
+    "/placeholder.svg?height=400&width=600&text=Mahindra%20XUV700%20Front",
+    "/placeholder.svg?height=400&width=600&text=Mahindra%20XUV700%20Side",
+    "/placeholder.svg?height=400&width=600&text=Mahindra%20XUV700%20Rear",
+  ],
+  "Toyota Fortuner": [
+    "/placeholder.svg?height=400&width=600&text=Toyota%20Fortuner%20Front",
+    "/placeholder.svg?height=400&width=600&text=Toyota%20Fortuner%20Side",
+    "/placeholder.svg?height=400&width=600&text=Toyota%20Fortuner%20Rear",
+  ],
+}
 
 type FormData = {
   drivingExperience: number
@@ -23,12 +51,6 @@ type FormData = {
   priority3: string
   shortlistedCars: string
   preferences: string
-}
-
-type ContactFormData = {
-  name: string
-  phone: string
-  address?: string
 }
 
 export async function getCarRecommendations(data: FormData) {
@@ -128,9 +150,18 @@ Only include cars that are currently available in India and match my budget rang
 
 export async function searchCarImages(carName: string) {
   try {
-    // Use Google's Programmable Search Engine API to search for car images
-    // For this demo, we'll return a mock response
-    // In a production app, you would integrate with Google's Custom Search API
+    // Check if we have predefined images for this car
+    const normalizedCarName = Object.keys(CAR_IMAGE_MAPPING).find((key) =>
+      carName.toLowerCase().includes(key.toLowerCase()),
+    )
+
+    if (normalizedCarName && CAR_IMAGE_MAPPING[normalizedCarName]) {
+      // Return predefined images
+      return {
+        searchQuery: `${normalizedCarName} car india exterior`,
+        imageUrls: CAR_IMAGE_MAPPING[normalizedCarName],
+      }
+    }
 
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -151,25 +182,5 @@ export async function searchCarImages(carName: string) {
   } catch (error) {
     console.error("Error searching for car images:", error)
     throw new Error("Failed to search for car images")
-  }
-}
-
-export async function sendContactEmail(data: ContactFormData) {
-  try {
-    // For now, we'll simulate a successful email send
-    // In a production environment, you would use EmailJS or another email service
-
-    console.log("Contact form submission:", data)
-
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // In a real implementation, you would send an email here
-    // For example, using EmailJS or another email service
-
-    return { success: true }
-  } catch (error) {
-    console.error("Error sending email:", error)
-    throw new Error("Failed to send email. Please try again later.")
   }
 }
