@@ -31,7 +31,7 @@ export default function ContactPage() {
                 <Phone className="h-6 w-6 text-orange-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2 text-white">Phone</h3>
-              <p className="text-white/80">+91 98765 43210</p>
+              <p className="text-white/80">+91938299950.</p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 flex flex-col items-center text-center">
@@ -39,7 +39,7 @@ export default function ContactPage() {
                 <Mail className="h-6 w-6 text-orange-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2 text-white">Email</h3>
-              <p className="text-white/80">info@carguruindia.com</p>
+              <p className="text-white/80">subhoanjan3@gmail.com</p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 flex flex-col items-center text-center">
@@ -47,7 +47,7 @@ export default function ContactPage() {
                 <MapPin className="h-6 w-6 text-orange-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2 text-white">Address</h3>
-              <p className="text-white/80">Mumbai, India</p>
+              <p className="text-white/80">Kolkata, India</p>
             </div>
           </div>
 
