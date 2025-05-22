@@ -59,7 +59,7 @@ export default function AboutPage() {
                 <Link href="https://www.instagram.com/subham4815/" target="_blank" rel="noopener noreferrer">
                   <Button
                     variant="outline"
-                    className="flex items-center gap-2 border-orange-500 text-white hover:bg-orange-500/20"
+                    className="flex items-center gap-2 border-orange-500 text-black hover:bg-orange-500/20"
                   >
                     <Instagram className="h-4 w-4 text-orange-500" />
                     Follow on Instagram
