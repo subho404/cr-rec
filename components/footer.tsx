@@ -35,15 +35,15 @@ export default function Footer() {
           <div className="grid grid-cols-1 gap-2">
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-orange-500" />
-              <span className="text-sm text-white/80">+91 98765 43210</span>
+              <span className="text-sm text-white/80">+91938299950..</span>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-orange-500" />
-              <span className="text-sm text-white/80">info@carguruindia.com</span>
+              <span className="text-sm text-white/80">subhoanjan3@gmail.com</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-orange-500" />
-              <span className="text-sm text-white/80">Mumbai, India</span>
+              <span className="text-sm text-white/80">Kolkata, India</span>
             </div>
           </div>
         </div>

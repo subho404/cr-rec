@@ -11,7 +11,7 @@ export default function RecommendationsPage() {
     <div className="relative min-h-screen overflow-hidden">
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
-        <Image src="/placeholder.svg?height=1080&width=1920" alt="Background" fill className="object-cover" priority />
+        <Image src="/placeholder-logo.jpg?height=1080&width=1920" alt="Background" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gray-900/80" />
       </div>
 

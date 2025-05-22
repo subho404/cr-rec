@@ -42,7 +42,7 @@ export default function AboutPage() {
             <Card className="overflow-hidden flex flex-col bg-white/10 backdrop-blur-sm border border-white/20">
               <div className="relative w-full pt-[75%]">
                 <Image
-                  src="/images/subham.png"
+                  src="subham.png"
                   alt="Subham Biswas"
                   fill
                   className="object-contain"
@@ -71,7 +71,7 @@ export default function AboutPage() {
             <Card className="overflow-hidden flex flex-col bg-white/10 backdrop-blur-sm border border-white/20">
               <div className="relative w-full pt-[75%]">
                 <Image
-                  src="/images/bijit.png"
+                  src="bijit.png"
                   alt="Bijit Sarkar"
                   fill
                   className="object-contain"
