@@ -25,7 +25,7 @@ export default function ContactForm() {
 
   // Initialize EmailJS
   useEffect(() => {
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'iXFNlxrwNb5ZOBxKm'
     if (publicKey) {
       emailjs.init(publicKey)
       setEmailJSInitialized(true)
@@ -60,8 +60,8 @@ export default function ContactForm() {
         throw new Error("Email service is not initialized. Please try again later.")
       }
 
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_kvsw6fx'
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_x1eqqob'
 
       if (!serviceId || !templateId) {
         throw new Error("Email service configuration is incomplete. Please contact the administrator.")

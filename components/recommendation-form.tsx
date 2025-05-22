@@ -1,12 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { Car, IndianRupee } from "lucide-react"
+import { useForm, Controller } from "react-hook-form"
+import { Car } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getCarRecommendations } from "@/app/actions"
 import CarRecommendations from "./car-recommendations"
 
@@ -24,10 +26,28 @@ const PRIORITY_OPTIONS = [
   "Space",
 ]
 
+const CAR_TYPES = [
+  "Hatchback",
+  "Sedan",
+  "SUV",
+  "MUV/MPV",
+  "Crossover",
+  "Luxury Sedan",
+  "Luxury SUV",
+  "Sports Car",
+  "Electric Vehicle",
+  "Compact SUV",
+]
+
+// Budget range in lakhs (₹)
+const MIN_BUDGET = 3 // 3 lakhs
+const MAX_BUDGET = 50 // 50 lakhs
+const STEP_BUDGET = 1 // 1 lakh steps
+
 type FormValues = {
   previousCar: string
-  minBudget: number
-  maxBudget: number
+  budgetRange: number[]
+  carType: string
   maxPeople: string
   dailyDriving: string
   roadConditions: string
@@ -51,12 +71,13 @@ export default function RecommendationForm() {
     handleSubmit,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       previousCar: "",
-      minBudget: 500000,
-      maxBudget: 1500000,
+      budgetRange: [5, 15], // Default: 5-15 lakhs
+      carType: "",
       maxPeople: "",
       dailyDriving: "",
       roadConditions: "",
@@ -68,8 +89,7 @@ export default function RecommendationForm() {
     },
   })
 
-  const minBudget = watch("minBudget")
-  const maxBudget = watch("maxBudget")
+  const budgetRange = watch("budgetRange")
   const priority1 = watch("priority1")
   const priority2 = watch("priority2")
 
@@ -94,18 +114,16 @@ export default function RecommendationForm() {
       setIsLoading(true)
       setFormErrors({})
 
-      // Validate that max budget is greater than min budget
-      if (data.maxBudget <= data.minBudget) {
-        setFormErrors({
-          ...formErrors,
-          maxBudget: "Maximum budget must be greater than minimum budget",
-        })
-        setIsLoading(false)
-        return
-      }
-
       // Validate required fields
-      const requiredFields = ["maxPeople", "dailyDriving", "roadConditions", "priority1", "priority2", "priority3"]
+      const requiredFields = [
+        "carType",
+        "maxPeople",
+        "dailyDriving",
+        "roadConditions",
+        "priority1",
+        "priority2",
+        "priority3",
+      ]
       const newErrors: Record<string, string> = {}
 
       requiredFields.forEach((field) => {
@@ -120,10 +138,16 @@ export default function RecommendationForm() {
         return
       }
 
+      // Convert budget from lakhs to actual values
+      const minBudget = data.budgetRange[0] * 100000
+      const maxBudget = data.budgetRange[1] * 100000
+
       // Add a default driving experience of 0 for the API
       const formData = {
         ...data,
         drivingExperience: 0,
+        minBudget,
+        maxBudget,
       }
 
       const result = await getCarRecommendations(formData)
@@ -136,11 +160,7 @@ export default function RecommendationForm() {
   }
 
   const formatBudget = (value: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(value)
+    return `₹${value} Lakh${value !== 1 ? "s" : ""}`
   }
 
   return (
@@ -162,104 +182,129 @@ export default function RecommendationForm() {
             <div className="space-y-8">
               <h4 className="text-lg font-medium text-primary">Car Guru Questions</h4>
 
-              <div>
-                <div className="text-sm font-medium mb-2">Budget Range (₹)</div>
-                <div className="flex items-center gap-2 mb-2">
-                  <IndianRupee className="h-4 w-4" />
-                  <span>
-                    {formatBudget(minBudget)} - {formatBudget(maxBudget)}
-                  </span>
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <Label htmlFor="budgetRange">What is your budget?</Label>
+                  <div className="pt-6 pb-2">
+                    <Controller
+                      name="budgetRange"
+                      control={control}
+                      render={({ field }) => (
+                        <Slider
+                          min={MIN_BUDGET}
+                          max={MAX_BUDGET}
+                          step={STEP_BUDGET}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>{formatBudget(budgetRange[0])}</span>
+                    <span>{formatBudget(budgetRange[1])}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Select your budget range in lakhs (₹)</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <Label htmlFor="minBudget">Minimum Budget</Label>
-                    <Input
-                      id="minBudget"
-                      type="number"
-                      min={100000}
-                      step={50000}
-                      {...register("minBudget", {
-                        valueAsNumber: true,
-                        min: {
-                          value: 100000,
-                          message: "Minimum budget should be at least ₹1,00,000",
-                        },
-                      })}
-                    />
-                    {errors.minBudget && <p className="text-sm text-red-500">{errors.minBudget.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="maxBudget">Maximum Budget</Label>
-                    <Input
-                      id="maxBudget"
-                      type="number"
-                      min={100000}
-                      step={50000}
-                      {...register("maxBudget", {
-                        valueAsNumber: true,
-                        min: {
-                          value: 100000,
-                          message: "Maximum budget should be at least ₹1,00,000",
-                        },
-                      })}
-                    />
-                    {errors.maxBudget && <p className="text-sm text-red-500">{errors.maxBudget.message}</p>}
-                    {formErrors.maxBudget && <p className="text-sm text-red-500">{formErrors.maxBudget}</p>}
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="carType">Car Type</Label>
+                  <Controller
+                    name="carType"
+                    control={control}
+                    rules={{ required: "Car type is required" }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger id="carType" className="w-full">
+                          <SelectValue placeholder="Select car type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CAR_TYPES.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {formErrors.carType && <p className="text-sm text-red-500">{formErrors.carType}</p>}
+                  <p className="text-sm text-muted-foreground">What type of car are you looking for?</p>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="maxPeople">Maximum People Travelling</Label>
-                <select
-                  id="maxPeople"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  {...register("maxPeople", { required: true })}
-                >
-                  <option value="">Select number of passengers</option>
-                  {[2, 3, 4, 5, 6, 7].map((num) => (
-                    <option key={num} value={num.toString()}>
-                      {num} people
-                    </option>
-                  ))}
-                </select>
-                <p className="text-sm text-muted-foreground">How many people will typically travel in the car?</p>
-                {formErrors.maxPeople && <p className="text-sm text-red-500">{formErrors.maxPeople}</p>}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="maxPeople">Maximum People Travelling</Label>
+                  <Controller
+                    name="maxPeople"
+                    control={control}
+                    rules={{ required: "Maximum people is required" }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger id="maxPeople" className="w-full">
+                          <SelectValue placeholder="Select number of passengers" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[2, 3, 4, 5, 6, 7].map((num) => (
+                            <SelectItem key={num} value={num.toString()}>
+                              {num} people
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {formErrors.maxPeople && <p className="text-sm text-red-500">{formErrors.maxPeople}</p>}
+                  <p className="text-sm text-muted-foreground">How many people will typically travel in the car?</p>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="dailyDriving">Approximate Daily Driving</Label>
-                <select
-                  id="dailyDriving"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  {...register("dailyDriving", { required: true })}
-                >
-                  <option value="">Select daily driving distance</option>
-                  <option value="Less than 10 Kms">Less than 10 Kms</option>
-                  <option value="10-30 Kms">10-30 Kms</option>
-                  <option value="30-50 Kms">30-50 Kms</option>
-                  <option value="50+ Kms">50+ Kms</option>
-                </select>
-                <p className="text-sm text-muted-foreground">How far do you drive on a typical day?</p>
-                {formErrors.dailyDriving && <p className="text-sm text-red-500">{formErrors.dailyDriving}</p>}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dailyDriving">Approximate Daily Driving</Label>
+                  <Controller
+                    name="dailyDriving"
+                    control={control}
+                    rules={{ required: "Daily driving is required" }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger id="dailyDriving" className="w-full">
+                          <SelectValue placeholder="Select daily driving distance" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Less than 10 Kms">Less than 10 Kms</SelectItem>
+                          <SelectItem value="10-30 Kms">10-30 Kms</SelectItem>
+                          <SelectItem value="30-50 Kms">30-50 Kms</SelectItem>
+                          <SelectItem value="50+ Kms">50+ Kms</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {formErrors.dailyDriving && <p className="text-sm text-red-500">{formErrors.dailyDriving}</p>}
+                  <p className="text-sm text-muted-foreground">How far do you drive on a typical day?</p>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="roadConditions">Road Conditions</Label>
-                <select
-                  id="roadConditions"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  {...register("roadConditions", { required: true })}
-                >
-                  <option value="">Select typical road conditions</option>
-                  <option value="City">City</option>
-                  <option value="Highway">Highway</option>
-                  <option value="Bad - Broken Roads">Bad - Broken Roads</option>
-                </select>
-                <p className="text-sm text-muted-foreground">What type of roads will you primarily drive on?</p>
-                {formErrors.roadConditions && <p className="text-sm text-red-500">{formErrors.roadConditions}</p>}
+                <div className="space-y-2">
+                  <Label htmlFor="roadConditions">Road Conditions</Label>
+                  <Controller
+                    name="roadConditions"
+                    control={control}
+                    rules={{ required: "Road conditions is required" }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger id="roadConditions" className="w-full">
+                          <SelectValue placeholder="Select typical road conditions" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="City">City</SelectItem>
+                          <SelectItem value="Highway">Highway</SelectItem>
+                          <SelectItem value="Bad - Broken Roads">Bad - Broken Roads</SelectItem>
+                          <SelectItem value="Mixed">Mixed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {formErrors.roadConditions && <p className="text-sm text-red-500">{formErrors.roadConditions}</p>}
+                  <p className="text-sm text-muted-foreground">What type of roads will you primarily drive on?</p>
+                </div>
               </div>
 
               <div className="space-y-6">
@@ -267,57 +312,77 @@ export default function RecommendationForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="priority1">Priority 1</Label>
-                  <select
-                    id="priority1"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={priority1}
-                    onChange={(e) => handlePriority1Change(e.target.value)}
-                  >
-                    <option value="">Select your first priority</option>
-                    {priority1Options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="priority1"
+                    control={control}
+                    rules={{ required: "Priority 1 is required" }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={handlePriority1Change}>
+                        <SelectTrigger id="priority1" className="w-full">
+                          <SelectValue placeholder="Select your first priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {priority1Options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                   {formErrors.priority1 && <p className="text-sm text-red-500">{formErrors.priority1}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="priority2">Priority 2</Label>
-                  <select
-                    id="priority2"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={priority2}
-                    onChange={(e) => handlePriority2Change(e.target.value)}
-                    disabled={!priority1}
-                  >
-                    <option value="">Select your second priority</option>
-                    {priority2Options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="priority2"
+                    control={control}
+                    rules={{ required: "Priority 2 is required" }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={handlePriority2Change} disabled={!priority1}>
+                        <SelectTrigger id="priority2" className="w-full">
+                          <SelectValue placeholder="Select your second priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {priority2Options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                   {formErrors.priority2 && <p className="text-sm text-red-500">{formErrors.priority2}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="priority3">Priority 3</Label>
-                  <select
-                    id="priority3"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={watch("priority3")}
-                    onChange={(e) => handlePriority3Change(e.target.value)}
-                    disabled={!priority1 || !priority2}
-                  >
-                    <option value="">Select your third priority</option>
-                    {priority3Options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="priority3"
+                    control={control}
+                    rules={{ required: "Priority 3 is required" }}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={handlePriority3Change}
+                        disabled={!priority1 || !priority2}
+                      >
+                        <SelectTrigger id="priority3" className="w-full">
+                          <SelectValue placeholder="Select your third priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {priority3Options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                   {formErrors.priority3 && <p className="text-sm text-red-500">{formErrors.priority3}</p>}
                 </div>
               </div>

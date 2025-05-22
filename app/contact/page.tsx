@@ -1,5 +1,5 @@
 import ContactForm from "@/components/contact-form"
-import DebugEnv from "@/components/debug-env"
+import {DebugEnv} from "@/components/debug-env"
 
 export default function ContactPage() {
   return (
@@ -10,7 +10,7 @@ export default function ContactPage() {
           Have questions or need assistance? Fill out the form below and our team will get back to you as soon as
           possible.
         </p>
-        
+        <ContactForm/>
         <DebugEnv />
       </div>
     </div>

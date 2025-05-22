@@ -43,6 +43,7 @@ type FormData = {
   previousCar?: string
   minBudget: number
   maxBudget: number
+  carType: string
   maxPeople: string
   dailyDriving: string
   roadConditions: string
@@ -78,6 +79,7 @@ export async function getCarRecommendations(data: FormData) {
 
 ${data.previousCar ? `- Current/Previous Car: ${data.previousCar}` : ""}
 - Budget Range: ${minBudgetFormatted} to ${maxBudgetFormatted}
+- Car Type: ${data.carType}
 - Maximum People Travelling: ${data.maxPeople}
 - Approximate Daily Driving: ${data.dailyDriving}
 - Road Conditions: ${data.roadConditions}
@@ -88,13 +90,21 @@ ${data.previousCar ? `- Current/Previous Car: ${data.previousCar}` : ""}
 - Shortlisted Cars: ${shortlistedCars}
 - Additional Preferences: ${data.preferences}
 
-Please recommend 3 cars that would be suitable for me. For each car, provide:
+Please recommend EXACTLY 3 cars that would be suitable for me. For each car, provide:
 1. The car name (make and model)
 2. A brief description
 3. The price range in Indian Rupees (INR)
 4. 4-5 pros
 5. 2-3 cons
 6. A paragraph explaining why you recommend this car based on my requirements
+
+IMPORTANT GUIDELINES:
+1. Consider ALL car brands available in India, including international brands like Toyota, Honda, Hyundai, Volkswagen, Skoda, Kia, MG, etc., not just Indian manufacturers.
+2. Be accurate with your recommendations - if I mention "sporty engine" or "performance", recommend cars known for these attributes (like Skoda, Volkswagen, or appropriate models from other brands).
+3. Ensure the recommendations match the car type I specified.
+4. Only recommend cars that are currently available in the Indian market and match my budget range.
+5. Provide diverse recommendations from different manufacturers.
+6. Be specific about models, variants, and features.
 
 If I've shortlisted cars (not "No cars shortlisted"), also provide a comparison section explaining:
 1. The strengths of each shortlisted car
@@ -121,9 +131,7 @@ Format your response as a JSON object with the following structure:
       "whyBetter": "Why recommended cars are better than this shortlisted car"
     }
   ]
-}
-
-Only include cars that are currently available in India and match my budget range. Focus on providing accurate information about the Indian car market.`
+}`
 
     // Use the Gemini model to generate recommendations
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })

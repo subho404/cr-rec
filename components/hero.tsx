@@ -21,7 +21,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="relative min-h-[600px] overflow-hidden bg-background">
+    <div className="relative min-h-[600px] overflow-hidden">
       <div className="container mx-auto h-full py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
           <div className="space-y-8 max-w-xl">
@@ -30,7 +30,7 @@ export default function Hero() {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-5xl md:text-6xl font-bold leading-tight"
+                className="text-5xl md:text-6xl font-bold leading-tight text-white"
               >
                 Get your
               </motion.h1>
@@ -38,7 +38,7 @@ export default function Hero() {
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-5xl md:text-6xl font-bold leading-tight"
+                className="text-5xl md:text-6xl font-bold leading-tight text-white"
               >
                 next car
               </motion.h1>
@@ -46,7 +46,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="text-5xl md:text-6xl font-bold leading-tight"
+                className="text-5xl md:text-6xl font-bold leading-tight text-white"
               >
                 recommendation from us.
               </motion.h1>
@@ -56,7 +56,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-xl text-muted-foreground"
+              className="text-xl text-white/80"
             >
               AI-powered recommendations tailored to your preferences, budget, and driving needs in India.
             </motion.p>
@@ -69,7 +69,7 @@ export default function Hero() {
               <Button
                 onClick={scrollToForm}
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 shadow-lg"
               >
                 Get Recommendations <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
@@ -83,7 +83,7 @@ export default function Hero() {
             className="relative h-[400px] lg:h-[500px] w-full"
           >
             <Image
-              src="/placeholder-logo.jpg?height=1080&width=1920"
+              src="/placeholder.svg?height=1080&width=1920"
               alt="Premium car"
               fill
               className="object-contain object-right"
@@ -100,7 +100,12 @@ export default function Hero() {
         transition={{ duration: 0.8, delay: 1.5 }}
         className="absolute bottom-8 left-0 right-0 flex justify-center"
       >
-        <Button variant="ghost" size="sm" onClick={scrollToForm} className="rounded-full animate-bounce">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={scrollToForm}
+          className="rounded-full animate-bounce text-white hover:bg-white/20 hover:text-white"
+        >
           <ChevronDown className="h-6 w-6" />
         </Button>
       </motion.div>
