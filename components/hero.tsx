@@ -83,7 +83,7 @@ export default function Hero() {
             className="relative h-[400px] lg:h-[500px] w-full"
           >
             <Image
-              src="/placeholder-logo.jpg?height=1080&width=1920"
+              src="/placeholder.svg?height=1080&width=1920"
               alt="Premium car"
               fill
               className="object-contain object-right"

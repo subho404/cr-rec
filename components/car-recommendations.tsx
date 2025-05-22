@@ -53,10 +53,10 @@ export default function CarRecommendations({ recommendations }: { recommendation
 
   if (!recommendations || !recommendations.cars || recommendations.cars.length === 0) {
     return (
-      <Card>
+      <Card className="bg-black/70 backdrop-blur-sm border border-white/10">
         <CardHeader>
-          <CardTitle className="text-center text-red-500">No Recommendations Found</CardTitle>
-          <CardDescription className="text-center">
+          <CardTitle className="text-center text-red-400">No Recommendations Found</CardTitle>
+          <CardDescription className="text-center text-white/80">
             We couldn't generate recommendations based on your criteria. Please try again with different preferences.
           </CardDescription>
         </CardHeader>
@@ -94,17 +94,19 @@ export default function CarRecommendations({ recommendations }: { recommendation
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <div className="bg-primary/10 p-6 rounded-lg">
-        <h3 className="text-2xl font-bold text-center mb-4 text-primary">Your Personalized Car Recommendations</h3>
-        <p className="text-center text-muted-foreground mb-2">
-          Based on your preferences, we recommend the following cars:
-        </p>
+      <div className="bg-orange-500/20 backdrop-blur-sm p-6 rounded-lg border border-orange-500/30">
+        <h3 className="text-2xl font-bold text-center mb-4 text-white">Your Personalized Car Recommendations</h3>
+        <p className="text-center text-white/80 mb-2">Based on your preferences, we recommend the following cars:</p>
         <div className="flex justify-center gap-2 mb-4">
           {cars.map((car: any, index: number) => (
             <Badge
               key={index}
               variant={index === currentIndex ? "default" : "outline"}
-              className={index === currentIndex ? "bg-primary hover:bg-primary/90" : "cursor-pointer"}
+              className={
+                index === currentIndex
+                  ? "bg-orange-500 hover:bg-orange-600 text-white"
+                  : "border-orange-500/50 text-white hover:border-orange-500 cursor-pointer"
+              }
               onClick={() => setCurrentIndex(index)}
             >
               {index + 1}
@@ -114,13 +116,23 @@ export default function CarRecommendations({ recommendations }: { recommendation
       </div>
 
       <Tabs defaultValue="recommendation" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="recommendation">Recommendation</TabsTrigger>
-          <TabsTrigger value="comparison">Comparison</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-black/50 border border-white/10">
+          <TabsTrigger
+            value="recommendation"
+            className="data-[state=active]:bg-orange-500 data-[state=active]:text-white text-white/70"
+          >
+            Recommendation
+          </TabsTrigger>
+          <TabsTrigger
+            value="comparison"
+            className="data-[state=active]:bg-orange-500 data-[state=active]:text-white text-white/70"
+          >
+            Comparison
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="recommendation">
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden bg-black/70 backdrop-blur-sm border border-white/10">
             <div className="relative h-[250px] md:h-[300px]">
               <AnimatePresence mode="wait">
                 {isLoadingImages ? (
@@ -130,11 +142,11 @@ export default function CarRecommendations({ recommendations }: { recommendation
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute inset-0 flex items-center justify-center bg-muted"
+                    className="absolute inset-0 flex items-center justify-center bg-black/50"
                   >
                     <div className="space-y-2">
-                      <Skeleton className="h-4 w-[200px] mx-auto" />
-                      <Skeleton className="h-4 w-[160px] mx-auto" />
+                      <Skeleton className="h-4 w-[200px] mx-auto bg-white/10" />
+                      <Skeleton className="h-4 w-[160px] mx-auto bg-white/10" />
                     </div>
                   </motion.div>
                 ) : carImages.length > 0 ? (
@@ -163,9 +175,9 @@ export default function CarRecommendations({ recommendations }: { recommendation
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute inset-0 flex items-center justify-center bg-muted"
+                    className="absolute inset-0 flex items-center justify-center bg-black/50"
                   >
-                    <p>No images available</p>
+                    <p className="text-white/70">No images available</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -173,7 +185,7 @@ export default function CarRecommendations({ recommendations }: { recommendation
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-full bg-background/80 hover:bg-background z-10"
+                  className="rounded-full bg-black/50 border-white/20 hover:bg-white/10 hover:border-white/40 text-white z-10"
                   onClick={carImages.length > 0 ? prevImage : prevCar}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -181,7 +193,7 @@ export default function CarRecommendations({ recommendations }: { recommendation
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-full bg-background/80 hover:bg-background z-10"
+                  className="rounded-full bg-black/50 border-white/20 hover:bg-white/10 hover:border-white/40 text-white z-10"
                   onClick={carImages.length > 0 ? nextImage : nextCar}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -189,13 +201,15 @@ export default function CarRecommendations({ recommendations }: { recommendation
               </div>
             </div>
 
-            <CardHeader>
+            <CardHeader className="border-t border-white/10">
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle className="text-2xl">{currentCar?.name}</CardTitle>
-                  <CardDescription>{currentCar?.description || "Perfect match for your requirements"}</CardDescription>
+                  <CardTitle className="text-2xl text-white">{currentCar?.name}</CardTitle>
+                  <CardDescription className="text-white/70">
+                    {currentCar?.description || "Perfect match for your requirements"}
+                  </CardDescription>
                 </div>
-                <Badge className="bg-primary hover:bg-primary/90">
+                <Badge className="bg-orange-500 hover:bg-orange-600 text-white">
                   {currentIndex + 1}/{cars.length}
                 </Badge>
               </div>
@@ -204,7 +218,7 @@ export default function CarRecommendations({ recommendations }: { recommendation
                   href={`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}&tbm=isch`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm text-primary hover:underline"
+                  className="inline-flex items-center text-sm text-orange-400 hover:text-orange-300"
                 >
                   <Search className="h-3 w-3 mr-1" />
                   View more images on Google
@@ -216,7 +230,7 @@ export default function CarRecommendations({ recommendations }: { recommendation
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold mb-3 text-green-600 flex items-center">
+                  <h4 className="text-lg font-semibold mb-3 text-green-400 flex items-center">
                     <Check className="mr-2 h-5 w-5" /> Pros
                   </h4>
                   <ul className="space-y-2">
@@ -228,15 +242,15 @@ export default function CarRecommendations({ recommendations }: { recommendation
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                         className="flex items-start"
                       >
-                        <Check className="mr-2 h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
-                        <span>{pro}</span>
+                        <Check className="mr-2 h-4 w-4 text-green-400 mt-1 flex-shrink-0" />
+                        <span className="text-white/90">{pro}</span>
                       </motion.li>
                     ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-semibold mb-3 text-red-600 flex items-center">
+                  <h4 className="text-lg font-semibold mb-3 text-red-400 flex items-center">
                     <X className="mr-2 h-5 w-5" /> Cons
                   </h4>
                   <ul className="space-y-2">
@@ -248,8 +262,8 @@ export default function CarRecommendations({ recommendations }: { recommendation
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                         className="flex items-start"
                       >
-                        <X className="mr-2 h-4 w-4 text-red-500 mt-1 flex-shrink-0" />
-                        <span>{con}</span>
+                        <X className="mr-2 h-4 w-4 text-red-400 mt-1 flex-shrink-0" />
+                        <span className="text-white/90">{con}</span>
                       </motion.li>
                     ))}
                   </ul>
@@ -260,28 +274,38 @@ export default function CarRecommendations({ recommendations }: { recommendation
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-4 bg-primary/10 rounded-md"
+                className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-md"
               >
-                <h4 className="font-semibold mb-2">Why We Recommend This Car:</h4>
-                <p>{currentCar?.whyRecommended || "This car perfectly matches your requirements and preferences."}</p>
+                <h4 className="font-semibold mb-2 text-white">Why We Recommend This Car:</h4>
+                <p className="text-white/90">
+                  {currentCar?.whyRecommended || "This car perfectly matches your requirements and preferences."}
+                </p>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="w-full p-4 bg-muted rounded-md"
+                className="w-full p-4 bg-white/10 border border-white/20 rounded-md"
               >
-                <h4 className="font-semibold mb-2">Price Range:</h4>
-                <p>{currentCar?.priceRange || "Within your specified budget"}</p>
+                <h4 className="font-semibold mb-2 text-white">Price Range:</h4>
+                <p className="text-white/90">{currentCar?.priceRange || "Within your specified budget"}</p>
               </motion.div>
             </CardContent>
 
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={prevCar} className="flex items-center">
+            <CardFooter className="flex justify-between border-t border-white/10 pt-6">
+              <Button
+                variant="outline"
+                onClick={prevCar}
+                className="flex items-center border-orange-500/50 text-white hover:bg-orange-500/20 hover:border-orange-500"
+              >
                 <ChevronLeft className="mr-1 h-4 w-4" /> Previous Car
               </Button>
-              <Button variant="outline" onClick={nextCar} className="flex items-center">
+              <Button
+                variant="outline"
+                onClick={nextCar}
+                className="flex items-center border-orange-500/50 text-white hover:bg-orange-500/20 hover:border-orange-500"
+              >
                 Next Car <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </CardFooter>
@@ -289,10 +313,12 @@ export default function CarRecommendations({ recommendations }: { recommendation
         </TabsContent>
 
         <TabsContent value="comparison">
-          <Card>
+          <Card className="bg-black/70 backdrop-blur-sm border border-white/10">
             <CardHeader>
-              <CardTitle>Comparison with Shortlisted Cars</CardTitle>
-              <CardDescription>See how our recommendations compare to your shortlisted cars</CardDescription>
+              <CardTitle className="text-white">Comparison with Shortlisted Cars</CardTitle>
+              <CardDescription className="text-white/70">
+                See how our recommendations compare to your shortlisted cars
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {shortlistedComparison.length > 0 ? (
@@ -302,40 +328,40 @@ export default function CarRecommendations({ recommendations }: { recommendation
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="p-4 border rounded-md"
+                    className="p-4 border border-white/20 bg-white/5 rounded-md"
                   >
-                    <h4 className="font-semibold text-lg mb-2">{comparison.car}</h4>
+                    <h4 className="font-semibold text-lg mb-2 text-white">{comparison.car}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <h5 className="font-medium flex items-center text-green-600">
+                        <h5 className="font-medium flex items-center text-green-400">
                           <ThumbsUp className="mr-2 h-4 w-4" /> Strengths
                         </h5>
                         <ul className="mt-2 space-y-1">
                           {comparison.strengths?.map((strength: string, idx: number) => (
                             <li key={idx} className="flex items-start text-sm">
-                              <Check className="mr-2 h-3 w-3 text-green-500 mt-1 flex-shrink-0" />
-                              <span>{strength}</span>
+                              <Check className="mr-2 h-3 w-3 text-green-400 mt-1 flex-shrink-0" />
+                              <span className="text-white/90">{strength}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
                       <div>
-                        <h5 className="font-medium flex items-center text-red-600">
+                        <h5 className="font-medium flex items-center text-red-400">
                           <ThumbsDown className="mr-2 h-4 w-4" /> Weaknesses
                         </h5>
                         <ul className="mt-2 space-y-1">
                           {comparison.weaknesses?.map((weakness: string, idx: number) => (
                             <li key={idx} className="flex items-start text-sm">
-                              <X className="mr-2 h-3 w-3 text-red-500 mt-1 flex-shrink-0" />
-                              <span>{weakness}</span>
+                              <X className="mr-2 h-3 w-3 text-red-400 mt-1 flex-shrink-0" />
+                              <span className="text-white/90">{weakness}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
                     </div>
-                    <div className="mt-3 pt-3 border-t">
-                      <h5 className="font-medium">Why Our Recommendation Is Better:</h5>
-                      <p className="mt-1 text-sm">
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <h5 className="font-medium text-white">Why Our Recommendation Is Better:</h5>
+                      <p className="mt-1 text-sm text-white/90">
                         {comparison.whyBetter ||
                           "Our recommendation better matches your specific needs and preferences."}
                       </p>
@@ -343,7 +369,7 @@ export default function CarRecommendations({ recommendations }: { recommendation
                   </motion.div>
                 ))
               ) : (
-                <div className="text-center p-4">
+                <div className="text-center p-4 text-white/70">
                   <p>No shortlisted cars were provided for comparison.</p>
                 </div>
               )}

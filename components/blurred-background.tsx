@@ -12,7 +12,7 @@ export default function BlurredBackground({ children }: BlurredBackgroundProps) 
     <div className="relative min-h-screen">
       {/* Blurred Background Image - src left empty for you to fill */}
       <div className="fixed inset-0 z-0">
-        <Image src="/placeholder-logo.jpg" alt="Background" fill className="object-cover" priority />
+        <Image src="/placeholder.svg" alt="Background" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       </div>
 

@@ -10,7 +10,7 @@ import Script from "next/script"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Car Guru India - Smart Car Recommendations",
+  title: "CarGuru India - Smart Car Recommendations",
   description: "Get personalized car recommendations based on your preferences and budget in India",
 }
 
@@ -29,8 +29,8 @@ export default function RootLayout({
           id="emailjs-script"
         />
       </head>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <body className={`${inter.className} bg-gray-900 text-white`}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>

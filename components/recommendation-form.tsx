@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
-import { Car } from "lucide-react"
+import { Car, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -11,6 +11,7 @@ import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getCarRecommendations } from "@/app/actions"
 import CarRecommendations from "./car-recommendations"
+import { motion } from "framer-motion"
 
 const PRIORITY_OPTIONS = [
   "Boot Space",
@@ -166,25 +167,39 @@ export default function RecommendationForm() {
   return (
     <div id="recommendation-form">
       {!recommendations ? (
-        <div className="bg-card p-6 rounded-lg shadow-md">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-black/70 backdrop-blur-sm p-6 rounded-lg border border-white/10 shadow-xl"
+        >
           <div className="flex items-center gap-2 mb-6">
-            <Car className="h-6 w-6 text-primary" />
-            <h3 className="text-2xl font-semibold">Tell Us About Your Requirements</h3>
+            <Car className="h-6 w-6 text-orange-500" />
+            <h3 className="text-2xl font-semibold text-white">Tell Us About Your Requirements</h3>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-4">
-              <Label htmlFor="previousCar">Current/Previous Car (Optional)</Label>
-              <Input id="previousCar" placeholder="e.g., Maruti Suzuki Swift" {...register("previousCar")} />
-              <p className="text-sm text-muted-foreground">What car are you currently driving or have driven before?</p>
+              <Label htmlFor="previousCar" className="text-white">
+                Current/Previous Car (Optional)
+              </Label>
+              <Input
+                id="previousCar"
+                placeholder="e.g., Maruti Suzuki Swift"
+                {...register("previousCar")}
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-orange-500"
+              />
+              <p className="text-sm text-white/60">What car are you currently driving or have driven before?</p>
             </div>
 
             <div className="space-y-8">
-              <h4 className="text-lg font-medium text-primary">Car Guru Questions</h4>
+              <h4 className="text-lg font-medium text-orange-500">Car Guru Questions</h4>
 
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <Label htmlFor="budgetRange">What is your budget?</Label>
+                  <Label htmlFor="budgetRange" className="text-white">
+                    What is your budget?
+                  </Label>
                   <div className="pt-6 pb-2">
                     <Controller
                       name="budgetRange"
@@ -201,27 +216,32 @@ export default function RecommendationForm() {
                       )}
                     />
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
+                  <div className="flex justify-between text-sm text-white/60">
                     <span>{formatBudget(budgetRange[0])}</span>
                     <span>{formatBudget(budgetRange[1])}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">Select your budget range in lakhs (₹)</p>
+                  <p className="text-sm text-white/60">Select your budget range in lakhs (₹)</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="carType">Car Type</Label>
+                  <Label htmlFor="carType" className="text-white">
+                    Car Type
+                  </Label>
                   <Controller
                     name="carType"
                     control={control}
                     rules={{ required: "Car type is required" }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger id="carType" className="w-full">
+                        <SelectTrigger
+                          id="carType"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500"
+                        >
                           <SelectValue placeholder="Select car type" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
                           {CAR_TYPES.map((type) => (
-                            <SelectItem key={type} value={type}>
+                            <SelectItem key={type} value={type} className="focus:bg-orange-500/20 focus:text-white">
                               {type}
                             </SelectItem>
                           ))}
@@ -229,24 +249,33 @@ export default function RecommendationForm() {
                       </Select>
                     )}
                   />
-                  {formErrors.carType && <p className="text-sm text-red-500">{formErrors.carType}</p>}
-                  <p className="text-sm text-muted-foreground">What type of car are you looking for?</p>
+                  {formErrors.carType && <p className="text-sm text-red-400">{formErrors.carType}</p>}
+                  <p className="text-sm text-white/60">What type of car are you looking for?</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="maxPeople">Maximum People Travelling</Label>
+                  <Label htmlFor="maxPeople" className="text-white">
+                    Maximum People Travelling
+                  </Label>
                   <Controller
                     name="maxPeople"
                     control={control}
                     rules={{ required: "Maximum people is required" }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger id="maxPeople" className="w-full">
+                        <SelectTrigger
+                          id="maxPeople"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500"
+                        >
                           <SelectValue placeholder="Select number of passengers" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
                           {[2, 3, 4, 5, 6, 7].map((num) => (
-                            <SelectItem key={num} value={num.toString()}>
+                            <SelectItem
+                              key={num}
+                              value={num.toString()}
+                              className="focus:bg-orange-500/20 focus:text-white"
+                            >
                               {num} people
                             </SelectItem>
                           ))}
@@ -254,76 +283,107 @@ export default function RecommendationForm() {
                       </Select>
                     )}
                   />
-                  {formErrors.maxPeople && <p className="text-sm text-red-500">{formErrors.maxPeople}</p>}
-                  <p className="text-sm text-muted-foreground">How many people will typically travel in the car?</p>
+                  {formErrors.maxPeople && <p className="text-sm text-red-400">{formErrors.maxPeople}</p>}
+                  <p className="text-sm text-white/60">How many people will typically travel in the car?</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="dailyDriving">Approximate Daily Driving</Label>
+                  <Label htmlFor="dailyDriving" className="text-white">
+                    Approximate Daily Driving
+                  </Label>
                   <Controller
                     name="dailyDriving"
                     control={control}
                     rules={{ required: "Daily driving is required" }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger id="dailyDriving" className="w-full">
+                        <SelectTrigger
+                          id="dailyDriving"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500"
+                        >
                           <SelectValue placeholder="Select daily driving distance" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Less than 10 Kms">Less than 10 Kms</SelectItem>
-                          <SelectItem value="10-30 Kms">10-30 Kms</SelectItem>
-                          <SelectItem value="30-50 Kms">30-50 Kms</SelectItem>
-                          <SelectItem value="50+ Kms">50+ Kms</SelectItem>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
+                          <SelectItem value="Less than 10 Kms" className="focus:bg-orange-500/20 focus:text-white">
+                            Less than 10 Kms
+                          </SelectItem>
+                          <SelectItem value="10-30 Kms" className="focus:bg-orange-500/20 focus:text-white">
+                            10-30 Kms
+                          </SelectItem>
+                          <SelectItem value="30-50 Kms" className="focus:bg-orange-500/20 focus:text-white">
+                            30-50 Kms
+                          </SelectItem>
+                          <SelectItem value="50+ Kms" className="focus:bg-orange-500/20 focus:text-white">
+                            50+ Kms
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     )}
                   />
-                  {formErrors.dailyDriving && <p className="text-sm text-red-500">{formErrors.dailyDriving}</p>}
-                  <p className="text-sm text-muted-foreground">How far do you drive on a typical day?</p>
+                  {formErrors.dailyDriving && <p className="text-sm text-red-400">{formErrors.dailyDriving}</p>}
+                  <p className="text-sm text-white/60">How far do you drive on a typical day?</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="roadConditions">Road Conditions</Label>
+                  <Label htmlFor="roadConditions" className="text-white">
+                    Road Conditions
+                  </Label>
                   <Controller
                     name="roadConditions"
                     control={control}
                     rules={{ required: "Road conditions is required" }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger id="roadConditions" className="w-full">
+                        <SelectTrigger
+                          id="roadConditions"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500"
+                        >
                           <SelectValue placeholder="Select typical road conditions" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="City">City</SelectItem>
-                          <SelectItem value="Highway">Highway</SelectItem>
-                          <SelectItem value="Bad - Broken Roads">Bad - Broken Roads</SelectItem>
-                          <SelectItem value="Mixed">Mixed</SelectItem>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
+                          <SelectItem value="City" className="focus:bg-orange-500/20 focus:text-white">
+                            City
+                          </SelectItem>
+                          <SelectItem value="Highway" className="focus:bg-orange-500/20 focus:text-white">
+                            Highway
+                          </SelectItem>
+                          <SelectItem value="Bad - Broken Roads" className="focus:bg-orange-500/20 focus:text-white">
+                            Bad - Broken Roads
+                          </SelectItem>
+                          <SelectItem value="Mixed" className="focus:bg-orange-500/20 focus:text-white">
+                            Mixed
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     )}
                   />
-                  {formErrors.roadConditions && <p className="text-sm text-red-500">{formErrors.roadConditions}</p>}
-                  <p className="text-sm text-muted-foreground">What type of roads will you primarily drive on?</p>
+                  {formErrors.roadConditions && <p className="text-sm text-red-400">{formErrors.roadConditions}</p>}
+                  <p className="text-sm text-white/60">What type of roads will you primarily drive on?</p>
                 </div>
               </div>
 
               <div className="space-y-6">
-                <h4 className="text-md font-medium text-primary">Your Top 3 Priorities</h4>
+                <h4 className="text-md font-medium text-orange-500">Your Top 3 Priorities</h4>
 
                 <div className="space-y-2">
-                  <Label htmlFor="priority1">Priority 1</Label>
+                  <Label htmlFor="priority1" className="text-white">
+                    Priority 1
+                  </Label>
                   <Controller
                     name="priority1"
                     control={control}
                     rules={{ required: "Priority 1 is required" }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={handlePriority1Change}>
-                        <SelectTrigger id="priority1" className="w-full">
+                        <SelectTrigger
+                          id="priority1"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500"
+                        >
                           <SelectValue placeholder="Select your first priority" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
                           {priority1Options.map((option) => (
-                            <SelectItem key={option} value={option}>
+                            <SelectItem key={option} value={option} className="focus:bg-orange-500/20 focus:text-white">
                               {option}
                             </SelectItem>
                           ))}
@@ -331,23 +391,28 @@ export default function RecommendationForm() {
                       </Select>
                     )}
                   />
-                  {formErrors.priority1 && <p className="text-sm text-red-500">{formErrors.priority1}</p>}
+                  {formErrors.priority1 && <p className="text-sm text-red-400">{formErrors.priority1}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="priority2">Priority 2</Label>
+                  <Label htmlFor="priority2" className="text-white">
+                    Priority 2
+                  </Label>
                   <Controller
                     name="priority2"
                     control={control}
                     rules={{ required: "Priority 2 is required" }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={handlePriority2Change} disabled={!priority1}>
-                        <SelectTrigger id="priority2" className="w-full">
+                        <SelectTrigger
+                          id="priority2"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500 disabled:opacity-50"
+                        >
                           <SelectValue placeholder="Select your second priority" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
                           {priority2Options.map((option) => (
-                            <SelectItem key={option} value={option}>
+                            <SelectItem key={option} value={option} className="focus:bg-orange-500/20 focus:text-white">
                               {option}
                             </SelectItem>
                           ))}
@@ -355,11 +420,13 @@ export default function RecommendationForm() {
                       </Select>
                     )}
                   />
-                  {formErrors.priority2 && <p className="text-sm text-red-500">{formErrors.priority2}</p>}
+                  {formErrors.priority2 && <p className="text-sm text-red-400">{formErrors.priority2}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="priority3">Priority 3</Label>
+                  <Label htmlFor="priority3" className="text-white">
+                    Priority 3
+                  </Label>
                   <Controller
                     name="priority3"
                     control={control}
@@ -370,12 +437,15 @@ export default function RecommendationForm() {
                         onValueChange={handlePriority3Change}
                         disabled={!priority1 || !priority2}
                       >
-                        <SelectTrigger id="priority3" className="w-full">
+                        <SelectTrigger
+                          id="priority3"
+                          className="w-full bg-white/10 border-white/20 text-white focus:border-orange-500 disabled:opacity-50"
+                        >
                           <SelectValue placeholder="Select your third priority" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-900 border-white/20 text-white">
                           {priority3Options.map((option) => (
-                            <SelectItem key={option} value={option}>
+                            <SelectItem key={option} value={option} className="focus:bg-orange-500/20 focus:text-white">
                               {option}
                             </SelectItem>
                           ))}
@@ -383,18 +453,21 @@ export default function RecommendationForm() {
                       </Select>
                     )}
                   />
-                  {formErrors.priority3 && <p className="text-sm text-red-500">{formErrors.priority3}</p>}
+                  {formErrors.priority3 && <p className="text-sm text-red-400">{formErrors.priority3}</p>}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="shortlistedCars">Shortlisted Cars</Label>
+                <Label htmlFor="shortlistedCars" className="text-white">
+                  Shortlisted Cars
+                </Label>
                 <Input
                   id="shortlistedCars"
                   placeholder="e.g., Hyundai Creta, Kia Seltos, Maruti Brezza (or 'Don't Know')"
                   {...register("shortlistedCars")}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-orange-500"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-white/60">
                   List your top 3 shortlisted cars, separated by commas. Type "Don't Know" if you haven't shortlisted
                   any.
                 </p>
@@ -402,11 +475,13 @@ export default function RecommendationForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="preferences">Additional Preferences</Label>
+              <Label htmlFor="preferences" className="text-white">
+                Additional Preferences
+              </Label>
               <Textarea
                 id="preferences"
                 placeholder="Tell us about any other preferences (e.g., fuel type, specific features, brand preferences, etc.)"
-                className="min-h-[120px]"
+                className="min-h-[120px] bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-orange-500"
                 {...register("preferences", {
                   minLength: {
                     value: 10,
@@ -414,21 +489,53 @@ export default function RecommendationForm() {
                   },
                 })}
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-white/60">
                 Any other details that might help us recommend the perfect car for you?
               </p>
-              {errors.preferences && <p className="text-sm text-red-500">{errors.preferences.message}</p>}
+              {errors.preferences && <p className="text-sm text-red-400">{errors.preferences.message}</p>}
             </div>
 
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
-              {isLoading ? "Getting Recommendations..." : "Get Car Recommendations"}
+            <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white" disabled={isLoading}>
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Getting Recommendations...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center">
+                  Get Car Recommendations <ChevronRight className="ml-2 h-5 w-5" />
+                </span>
+              )}
             </Button>
           </form>
-        </div>
+        </motion.div>
       ) : (
         <div className="space-y-6">
           <CarRecommendations recommendations={recommendations} />
-          <Button onClick={() => setRecommendations(null)} variant="outline" className="w-full">
+          <Button
+            onClick={() => setRecommendations(null)}
+            variant="outline"
+            className="w-full border-orange-500 text-white hover:bg-orange-500/20"
+          >
             Start Over
           </Button>
         </div>

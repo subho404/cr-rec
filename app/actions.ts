@@ -36,6 +36,21 @@ const CAR_IMAGE_MAPPING: Record<string, string[]> = {
     "/placeholder.svg?height=400&width=600&text=Toyota%20Fortuner%20Side",
     "/placeholder.svg?height=400&width=600&text=Toyota%20Fortuner%20Rear",
   ],
+  "Volkswagen Virtus": [
+    "/placeholder.svg?height=400&width=600&text=Volkswagen%20Virtus%20Front",
+    "/placeholder.svg?height=400&width=600&text=Volkswagen%20Virtus%20Side",
+    "/placeholder.svg?height=400&width=600&text=Volkswagen%20Virtus%20Rear",
+  ],
+  "Skoda Slavia": [
+    "/placeholder.svg?height=400&width=600&text=Skoda%20Slavia%20Front",
+    "/placeholder.svg?height=400&width=600&text=Skoda%20Slavia%20Side",
+    "/placeholder.svg?height=400&width=600&text=Skoda%20Slavia%20Rear",
+  ],
+  "Honda City": [
+    "/placeholder.svg?height=400&width=600&text=Honda%20City%20Front",
+    "/placeholder.svg?height=400&width=600&text=Honda%20City%20Side",
+    "/placeholder.svg?height=400&width=600&text=Honda%20City%20Rear",
+  ],
 }
 
 type FormData = {
@@ -74,8 +89,8 @@ export async function getCarRecommendations(data: FormData) {
         ? "No cars shortlisted"
         : data.shortlistedCars
 
-    // Construct the prompt for Gemini
-    const prompt = `You are an expert car advisor in India. I need recommendations for cars available in the Indian market based on the following information:
+    // Enhanced prompt for better recommendations
+    const prompt = `You are an expert car advisor in India with deep knowledge of all car brands and models available in the Indian market. I need recommendations for cars based on the following information:
 
 ${data.previousCar ? `- Current/Previous Car: ${data.previousCar}` : ""}
 - Budget Range: ${minBudgetFormatted} to ${maxBudgetFormatted}
@@ -105,6 +120,10 @@ IMPORTANT GUIDELINES:
 4. Only recommend cars that are currently available in the Indian market and match my budget range.
 5. Provide diverse recommendations from different manufacturers.
 6. Be specific about models, variants, and features.
+7. If I mention specific preferences like "fuel efficiency" or "safety features", prioritize cars that excel in those areas.
+8. Consider the road conditions I mentioned when recommending suspension and ground clearance.
+9. If I'm a new driver, prioritize cars that are easier to handle.
+10. For performance-oriented requests, consider turbocharged engines and cars with good power-to-weight ratios.
 
 If I've shortlisted cars (not "No cars shortlisted"), also provide a comparison section explaining:
 1. The strengths of each shortlisted car
