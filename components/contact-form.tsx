@@ -24,7 +24,7 @@ export default function ContactForm() {
 
   // Initialize EmailJS
   useEffect(() => {
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'iXFNlxrwNb5ZOBxKm'
     if (publicKey) {
       emailjs.init(publicKey)
       setEmailJSInitialized(true)
